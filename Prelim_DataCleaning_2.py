@@ -14,9 +14,9 @@ def lastCaps(sentence):
         else:
             caps = False
             if (i == 1):
-                return ""
+                return (0,"")
             else:
-                return sentence[-(i-1):]
+                return (i-1,sentence[-(i-1):])
 def process_txt(html_soup):
     diag = html_soup.find_all(size="2")
     output = ""
@@ -33,18 +33,16 @@ def process_txt(html_soup):
     test = output.split(":")
     
     toremove = []
-    print("here1")
     for i in range(len(test)):
         try:
-            if lastCaps(test[i]) != "":
-                test[i+1] = lastCaps(test[i])+ ": " +test[i+1] 
+            if lastCaps(test[i])[1] != "":
+                test[i+1] = lastCaps(test[i])[1]+ ": " +test[i+1] 
+                test[i] = test[i][:-lastCaps(test[i])[0]]
             else:
                 toremove.append(i+1)
         except:
             pass
-    print("here2")
     test = np.delete(np.array(test),toremove)
-    print("here")
     return test
         
 episodes = []
@@ -52,16 +50,18 @@ for i in tqdm(range(1,38)):
     go = True
     j = 1
     while go:
-        print("while {}-{}".format(i,j))
         url = "http://www.chakoteya.net/DoctorWho/{}-{}.htm".format(i,j)
-        try:
-            response = get(url)
-            if "/park.js" in str(response.text):
-                go = False
-            else:
-                html_soup = BeautifulSoup(response.text, 'html.parser')
-                episodes.append(process_txt(html_soup))
-                print("{}-{}".format(i,j))
-                j += 1
-        except:
-            print("Failed: {}-{}".format(i,j))
+        response = get(url)
+        if "/park.js" in str(response.text):
+            go = False
+        else:
+            html_soup = BeautifulSoup(response.text, 'html.parser')
+            episodes.append(process_txt(html_soup))
+#            print("{}-{}".format(i,j))
+            j += 1
+
+
+import pickle
+
+with open('D://updated//Chatty-V2//webscrap1.pkl', 'wb') as f:
+   pickle.dump(episodes, f)
