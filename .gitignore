@@ -8,3 +8,6 @@ DW_DATA/ckpts/ckpt-3.data-00001-of-00002
 DW_DATA/ckpts/ckpt-1.data-00001-of-00002
 DW_DATA/ckpts/ckpt-4.data-00000-of-00002
 DW_DATA/ckpts/ckpt-4.data-00001-of-00002
+glove.6B.100d.txt
+glove.6B.300d.txt
+glove.6B.zip
