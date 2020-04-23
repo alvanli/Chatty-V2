@@ -11,3 +11,6 @@ DW_DATA/ckpts/ckpt-4.data-00001-of-00002
 glove.6B.100d.txt
 glove.6B.300d.txt
 glove.6B.zip
+REDDIT_DATA/dialogueText_301.csv
+REDDIT_DATA/RC_2005-12
+REDDIT_DATA/ubuntu-dialogue-corpus.zip
