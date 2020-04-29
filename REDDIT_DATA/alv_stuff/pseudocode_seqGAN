@@ -1,0 +1,17 @@
+OVERALL:
+make generator
+load weights into generator
+pretrain generator
+make discriminator
+pretrain discriminator
+make rollout
+
+in each epoch:
+	make fake using generator
+	use rollout to get reward based on fake samples
+	train the generator for one step using the reward and fake samples
+	take real samples
+	zero the loss of discriminator
+	train the discrminator with fake samples and real samples, divide by step to normalize
+	calculate total discriminator loss
+	
