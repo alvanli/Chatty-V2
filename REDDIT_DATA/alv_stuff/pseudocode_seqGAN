@@ -54,5 +54,15 @@ train-step:
 with gradient tape:
 	put real through model, put fake through model, calc loss, apply gradient
 ----
-GEN:
+GEN (going back to this one later):
 
+model: embedding + LSTM + Dense(vocab size), not surprising
+loss: sum of sum of log of pred 
+generate: recurr unit similar to above, but for all new data (leaf nodes)
+----
+DISCRIM PRETRAIN:
+for epochs:
+	gen generate fake samples, get real samples
+	discrim train step
+----
+GEN PRETRAIN:
