@@ -1,4 +1,7 @@
 # Chatty-V2
-Python, fun Python stuff here...
+Our attempt at trying to make a chatbot? Using Python, Keras/ Tensorflow.
 
 Check out report.pdf!
+
+# Authors
+Alvin Li and Charmaine Lam
