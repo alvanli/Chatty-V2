@@ -1,0 +1,68 @@
+#https://github.com/BenStringer3/SeqGan/blob/31638d223de44a6ad1dfb884512c2fb0703a445c/rollout.py
+OVERALL:
+
+make generator
+load weights into generator
+pretrain generator
+make discriminator
+pretrain discriminator
+make rollout
+
+in each epoch:
+	make fake using generator
+	use rollout to get reward based on fake samples
+	train the generator for one step using the reward and fake samples
+	take real samples
+	zero the loss of discriminator
+	train the discrminator with fake samples and real samples, divide by step to normalize
+	calculate total discriminator loss
+------
+ROLLOUT:
+	
+Get reward func:
+for rollout num
+	for seq len
+		get unrolled_samples (params: seq_len_pos, fake samples)
+		append samples in rewards (of that position in the seq)
+	
+How to get unrolled samples:
+(params: seq_len_pos, fake samples):
+	instantiate 2 tensorarrays of seqlen (not pos) [called gen_x, ta_x]
+	ta x is just the unstacked version of the fake samples
+	g_recurr_1 (used when we are not at leaf node yet)
+		pass xt and hidden to recurrent unit
+		write the last index in genx
+		returns next index #, the value of last index, current seq pos, the new gen x
+	g_recurr_2(used when reached leaf node)
+		get output from generator using xt
+		get log prob from output (log of softmax)
+		get next token using random with param log prob
+		write the last index in genx
+		returns next index #, the value of last index, current seq pos, the new gen x
+	start genx with the start token
+	do g_recurr_1 until leaf node
+	do g_recurr_2 until seq len
+	reset states of generator 
+	put genx through the discriminator with sigmoid
+	return genx (what does ypred_for_auc mean?)
+----
+DISCRIM:
+
+model: just a Embedding + LSTM + Dense (1) model
+loss: just the combined loss of real and fake using BinCroEntropy
+train-step: 
+with gradient tape:
+	put real through model, put fake through model, calc loss, apply gradient
+----
+GEN (going back to this one later):
+
+model: embedding + LSTM + Dense(vocab size), not surprising
+loss: sum of sum of log of pred 
+generate: recurr unit similar to above, but for all new data (leaf nodes)
+----
+DISCRIM PRETRAIN:
+for epochs:
+	gen generate fake samples, get real samples
+	discrim train step
+----
+GEN PRETRAIN:
